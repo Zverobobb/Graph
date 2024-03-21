@@ -3,6 +3,7 @@
 #include <vector>
 #include <math.h>
 #include <string>
+#include <fstream>
 
 #define EDGES  58       // Количество ребер
 #define NODES  41       // Количество вершин
@@ -17,71 +18,73 @@ const int width = 2000;  // Ширина окна, пиксель
 
 float node[NODES][2];    // Координаты вершин
 
-int edge[EDGES][3] = {
-                        { 1,  2,  24 },
-                        { 2,  3,  10 },
-                        { 3,  4,  17 },
-                        { 4,  7,  44 },
-                        { 4,  5,  49 },
-                        { 5,  6,  23 },
-                        { 6,  7,  2  },
-                        { 7,  10, 10 },
-                        { 7,  8,  12 },
-                        { 7,  14, 36 },
+int edge[EDGES][4] = {
+                        { 1,  2,  24, 0 },
+                        { 2,  3,  10, 0 },
+                        { 3,  4,  17, 0 },
+                        { 4,  7,  44, 0 },
+                        { 4,  5,  49, 0 },
+                        { 5,  6,  23, 0 },
+                        { 6,  7,  2,  0 },
+                        { 7,  10, 10, 0 },
+                        { 7,  8,  12, 0 },
+                        { 7,  14, 36, 0 },
                         
-                        { 7,  9,  5  },
-                        { 10, 32, 5  },
-                        { 32, 36, 5  },
-                        { 32, 37, 7  },
-                        { 32, 38, 5  },
-                        { 32, 39, 9  },
-                        { 8,  11, 14 },
-                        { 8,  12, 3  },
-                        { 14, 15, 15 },
-                        { 8,  13, 5  },
+                        { 7,  9,  5,  0 },
+                        { 10, 32, 5,  0 },
+                        { 32, 36, 5,  0 },
+                        { 32, 37, 7,  0 },
+                        { 32, 38, 5,  0 },
+                        { 32, 39, 9,  0 },
+                        { 8,  11, 14, 0 },
+                        { 8,  12, 3,  0 },
+                        { 14, 15, 15, 0 },
+                        { 8,  13, 5,  0 },
 
-                        { 15, 19, 7  },
-                        { 15, 20, 7  },
-                        { 15, 21, 12 },
-                        { 14, 17, 32 },
-                        { 17, 22, 13 },
-                        { 17, 23, 14 },
-                        { 17, 24, 14 },
-                        { 17, 25, 31 },
-                        { 9,  26, 3  },
-                        { 9,  27, 3  },
+                        { 15, 19, 7,  0 },
+                        { 15, 20, 7,  0 },
+                        { 15, 21, 12, 0 },
+                        { 14, 17, 32, 0 },
+                        { 17, 22, 13, 0 },
+                        { 17, 23, 14, 0 },
+                        { 17, 24, 14, 0 },
+                        { 17, 25, 31, 0 },
+                        { 9,  26, 3,  0 },
+                        { 9,  27, 3,  0 },
 
-                        { 9,  28, 3  },
-                        { 13, 18, 10 },
-                        { 11, 18, 8  },
-                        { 12, 18, 9  },
-                        { 23, 30, 20 },
-                        { 24, 30, 20 },
-                        { 25, 30, 43 },
-                        { 22, 30, 14 },
-                        { 30, 33, 8  },
-                        { 16, 30, 5  },
+                        { 9,  28, 3,  0 },
+                        { 13, 18, 10, 0 },
+                        { 11, 18, 8,  0 },
+                        { 12, 18, 9,  0 },
+                        { 23, 30, 20, 0 },
+                        { 24, 30, 20, 0 },
+                        { 25, 30, 43, 0 },
+                        { 22, 30, 14, 0 },
+                        { 30, 33, 8,  0 },
+                        { 16, 30, 5,  0 },
 
-                        { 21, 29, 6  },
-                        { 20, 29, 5  },
-                        { 19, 29, 5  },
-                        { 18, 34, 3  },
-                        { 29, 33, 7  },
-                        { 33, 34, 6  },
-                        { 31, 34, 3  },
-                        { 34, 35, 15 },
-                        { 35, 36, 6  },
-                        { 36, 37, 24 },
+                        { 21, 29, 6,  0 },
+                        { 20, 29, 5,  0 },
+                        { 19, 29, 5,  0 },
+                        { 18, 34, 3,  0 },
+                        { 29, 33, 7,  0 },
+                        { 33, 34, 6,  0 },
+                        { 31, 34, 3,  0 },
+                        { 34, 35, 15, 0 },
+                        { 35, 36, 6,  0 },
+                        { 36, 37, 24, 0 },
 
-                        { 37, 38, 34 },
-                        { 38, 39, 12 },
-                        { 39, 40, 34 },
-                        { 40, 41, 7  },
-                        { 14, 16, 6  },
-                        { 26, 31, 3  },
-                        { 27, 31, 3  },
-                        { 28, 31, 3  }
+                        { 37, 38, 34, 0 },
+                        { 38, 39, 12, 0 },
+                        { 39, 40, 34, 0 },
+                        { 40, 41, 7,  0 },
+                        { 14, 16, 6,  0 },
+                        { 26, 31, 3,  0 },
+                        { 27, 31, 3,  0 },
+                        { 28, 31, 3,  0 }
 };
+
+int dataLaba[NODES][4];
 
 void display();
 void draw();
@@ -90,6 +93,7 @@ void mouse(int button, int status, int x, int y);
 void mouseMove(int x, int y);
 void timer(int i);
 void RenderString(float x, float y, float r, float g, float b, void* font, string text);
+void key(unsigned char k, int x, int y);
 
 
 int nMouseX, nMouseY;
@@ -117,6 +121,64 @@ int main(int argc, char** argv)
         node[i][1] = (float)(j % 8) / 4.0f - 1.0f + 1.0f / 8.0f;
     }
 
+    for (int i = 0; i < NODES; i++)
+    {
+        dataLaba[i][0] = i + 1;
+        dataLaba[i][1] = 0;
+        dataLaba[i][2] = 10000;
+    }
+
+    for (int i = 0; i < EDGES; i++)
+    {
+        for (int j = i; j < EDGES; j++)
+        {
+            int a, b, w;
+            a = edge[j][0] - 1;
+            b = edge[j][1] - 1;
+            w = edge[j][2];
+            dataLaba[b][1] = max(dataLaba[b][1], dataLaba[a][1] + w);
+        }
+    }
+    dataLaba[NODES - 1][2] = dataLaba[NODES - 1][1];
+    for (int i = EDGES - 1; i >= 0; i--)
+    {
+        for (int j = EDGES - 1; j >= 0; j--)
+        {
+            int a, b, w;
+            a = edge[j][0] - 1;
+            b = edge[j][1] - 1;
+            w = edge[j][2];
+            dataLaba[a][2] = min(dataLaba[a][2], dataLaba[b][2] - w);
+        }
+    }
+    for (int i = 0; i < NODES; i++)
+    {
+        dataLaba[i][3] = dataLaba[i][2] - dataLaba[i][1];
+    }
+
+    for (int i = 0; i < NODES; i++)
+    {
+        cout << dataLaba[i][0] << " " << dataLaba[i][1] << " " << dataLaba[i][2] << " " << dataLaba[i][3] << endl;
+    }
+
+    edge[0][3] = 1;
+    int pred = 0;
+    for (int i = 1; i < NODES; i++)
+    {
+        if (dataLaba[i][3] == 0)
+        {
+            for (int j = 0; j < EDGES; j++)
+            {
+                if (edge[j][0] == pred + 1 && edge[j][1] == dataLaba[i][0])
+                {
+                    edge[j][3] = 1;
+                    break;
+                }
+            }
+            pred = i;
+        }
+    }
+
     draw();
 
     return 0;
@@ -137,6 +199,7 @@ void draw()
 
     glutMouseFunc(mouse);               // Подключение обработчика событий иыши
     glutMotionFunc(mouseMove);          // Подключение функции движения мыши
+    glutKeyboardFunc(key);              // Подключение обработчика клавиатуры
     glutTimerFunc(100, timer, 0);       // Подключение функции постоянной отрисовки
 
     glutMainLoop();                     // Запуск функции отрисовки
@@ -145,12 +208,14 @@ void draw()
 void display()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);                 // Задание параметров буферу отрисовки
-
+    
     glColor3f(1.0f, 0.0f, 1.0f);
     glLineWidth(WID);
     glBegin(GL_LINES);
     for (int i = 0; i < EDGES; i++)
     {
+        if (edge[i][3] == 1) { glColor3f(1.0f, 0.0f, 0.0f); }
+        else                 { glColor3f(1.0f, 0.0f, 1.0f); }
         glVertex2f(node[edge[i][0] - 1][0], node[edge[i][0] - 1][1]);
         glVertex2f(node[edge[i][1] - 1][0], node[edge[i][1] - 1][1]);
     }
@@ -234,4 +299,34 @@ void mouseMove(int x, int y)
 void timer(int i) {
     display();
     glutTimerFunc(10, timer, 0);  // Окно отрисовывается принудительно каждые 10 миллисекунд (100 кадров в секунду)
+}
+
+void key(unsigned char k, int x, int y) {
+    if (k == 'r') {
+        int j = 0;
+        for (int i = 0; i < NODES; i++)
+        {
+            if (i % 8 == 0 && i != 0) { j++; }
+            node[i][0] = (float)(i % 8) / 4.0f - 1.0f + 1.0f / 8.0f;
+            node[i][1] = (float)(j % 8) / 4.0f - 1.0f + 1.0f / 8.0f;
+        }
+    }
+    if (k == 'q') {
+        ifstream fin("dataCoord.txt");
+        for (int i = 0; i < NODES; i++)
+        {
+            fin >> node[i][0];
+            fin >> node[i][1];
+        }
+        fin.close();
+    }
+    if (k == ' ') {
+        ofstream fout("dataCoord.txt");
+        for (int i = 0; i < NODES; i++)
+        {
+            fout << node[i][0] << endl;
+            fout << node[i][1] << endl;
+        }
+        fout.close();
+    }
 }
