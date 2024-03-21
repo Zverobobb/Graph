@@ -7,8 +7,8 @@
 #define EDGES  58       // Количество ребер
 #define NODES  41       // Количество вершин
 #define PI     3.141592 // Число Пи
-#define RADIUS 50       // Радиус вершин в пикселях
-#define WID    10       // Тощина ребер в пикселях
+#define RADIUS 30       // Радиус вершин в пикселях
+#define WID    5        // Тощина ребер в пикселях
 
 using namespace std;
 
@@ -89,7 +89,7 @@ void changeSize(int w, int h);
 void mouse(int button, int status, int x, int y);
 void mouseMove(int x, int y);
 void timer(int i);
-void RenderString(float x, float y, void* font, string text);
+void RenderString(float x, float y, float r, float g, float b, void* font, string text);
 
 
 int nMouseX, nMouseY;
@@ -165,17 +165,22 @@ void display()
     }
     glEnd();
 
+    for (int i = 0; i < EDGES; i++)
+    {
+        RenderString( (node[edge[i][1] - 1][0] + node[edge[i][0] - 1][0]) / 2.0f, (node[edge[i][1] - 1][1] + node[edge[i][0] - 1][1]) / 2.0f, 1.0f, 1.0f, 1.0f, GLUT_BITMAP_TIMES_ROMAN_24, to_string(edge[i][2]));
+    }
+
     for (int i = 0; i < NODES; i++)
     {
-        RenderString(node[i][0] - 0.01f, node[i][1] - 0.01f, GLUT_BITMAP_TIMES_ROMAN_24, to_string(i + 1));
+        RenderString(node[i][0] - 0.01f, node[i][1] - 0.01f, 0.0f, 0.0f, 0.0f, GLUT_BITMAP_TIMES_ROMAN_24, to_string(i + 1));
     }
 
     glutSwapBuffers();                // Отрисовка буфера
 }
 
-void RenderString(float x, float y, void* font, string text)
+void RenderString(float x, float y, float r, float g, float b, void* font, string text)
 {
-    glColor3f(0.0f, 0.0f, 0.0f);
+    glColor3f(r, g, b);
     glRasterPos2f(x, y);
 
     glutBitmapString(font, (const unsigned char*)text.c_str());
@@ -218,7 +223,7 @@ void mouseMove(int x, int y)
     nMouseX = x;                    // Запоминается текущее положение мыши
     nMouseY = y;
     if (pushMouse == true) {
-        node[minNode][0] += (float)(nMouseX - pMouseX) / width * 2;    // Если правая кнопка мыши нажата, изменяются координаты положения "Наблюдателя" в пространстве
+        node[minNode][0] += (float)(nMouseX - pMouseX) / width * 2;
         pMouseX = nMouseX;
         node[minNode][1] -= (float)(nMouseY - pMouseY) / height * 2;
         pMouseY = nMouseY;
